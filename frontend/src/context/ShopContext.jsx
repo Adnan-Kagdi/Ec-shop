@@ -108,21 +108,52 @@ const ShopContextProvider = (props) => {
         return totalAmount;
     }
 
-    const getProductsData = async () => {
-        try {
+    // const getProductsData = async () => {
+    //     try {
 
-            const response = await axios.get(backendUrl + '/api/product/list')
-            if (response.data.success) {
-                setProducts(response.data.products.reverse())
-            } else {
-                toast.error(response.data.message)
-            }
+    //         const response = await axios.get(backendUrl + '/api/product/list')
+    //         if (response.data.success) {
+    //             setProducts(response.data.products.reverse())
+    //         } else {
+    //             toast.error(response.data.message)
+    //         }
 
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
+    //     } catch (error) {
+    //         console.log(error)
+    //         toast.error(error.message)
+    //     }
+    // }
+
+const getProductsData = async () => {
+    try {
+        const url = backendUrl + '/api/product/list';
+        console.log("Fetching products from:", url);
+
+        const response = await axios.get(url);
+
+        if (response.data.success) {
+            setProducts(response.data.products.reverse());
+            console.log("Products fetched:", response.data.products.length);
+        } else {
+            toast.error(response.data.message || "Failed to fetch products");
+            console.warn("Backend responded but success=false:", response.data);
+        }
+
+    } catch (error) {
+        console.error("Error fetching products:", error);
+
+        if (error.response) {
+            toast.error(`Server responded with ${error.response.status}`);
+            console.warn("Response data:", error.response.data);
+            console.warn("Response headers:", error.response.headers);
+        } else if (error.request) {
+            toast.error("No response from server. Check backend URL and deployment.");
+            console.warn("Request made:", error.request);
+        } else {
+            toast.error("Error: " + error.message);
         }
     }
+};
 
     const getUserCart = async ( token ) => {
         try {
