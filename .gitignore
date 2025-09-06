@@ -3,7 +3,7 @@
 *.env
 
 # Ignore node_modules everywhere
-**/node_modules/
+**/node_modules
 
 # Logs
 npm-debug.log*
